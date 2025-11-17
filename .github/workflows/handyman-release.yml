@@ -11,7 +11,7 @@ jobs:
         - name: Install doctl 
           uses: digitalocean/action-doctl@v2
           with:
-            token: ${{ secrets.LEECO_TOKEN_UPDATED }}
+            token: ${{ secrets.DNY_TOKEN }}
         - name: Login To Registry
           run: doctl registry login
         - name: Build the latest Docker image
