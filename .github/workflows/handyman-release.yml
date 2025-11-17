@@ -1,4 +1,4 @@
-name: Leeco Development Release Latest
+name: Handyman Development Release
 
 on: workflow_dispatch
 
