@@ -30,3 +30,15 @@ class UserRead(BaseModel):
 
     class Config:
         from_attributes = True  # for SQLAlchemy -> Pydantic
+
+
+# 🔹 Public version: no DB id, no auth0_user_id
+class UserPublic(BaseModel):
+    full_name: str
+    phone: str
+    email: Optional[EmailStr]
+    role: UserRole
+    is_active: bool
+
+    class Config:
+        from_attributes = True

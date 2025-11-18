@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.core.security import require_auth
 from app.models.user import AppUser
-from app.schemas.user import UserCreate, UserRead
+from app.schemas.user import UserCreate, UserRead, UserPublic
 
 router = APIRouter()
 
@@ -63,4 +63,29 @@ def create_user(
         )
 
     db.refresh(user)
+    return user
+
+
+
+# 🔹 NEW: fetch user by email, safe public data only
+@router.get("/by-email", response_model=UserPublic)
+def get_user_by_email(
+    email: str,
+    db: Session = Depends(get_db),
+    token_payload: Dict[str, Any] = Depends(require_auth),
+):
+    """
+    Fetch a user by email.
+
+    - Requires Auth0 token in Authorization header
+    - Returns public user data only (no DB id, no auth0_user_id)
+    """
+    user = db.query(AppUser).filter(AppUser.email == email).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
     return user
