@@ -9,6 +9,7 @@ from sqlalchemy import (
     Text,
     text,
 )
+from sqlalchemy import Column, BigInteger, String, SmallInteger, Boolean, ForeignKey, Enum, TIMESTAMP, func
 from .base import Base
 
 
@@ -24,6 +25,21 @@ class TicketStatus(str, enum.Enum):
     WORK_STARTED = "WORK_STARTED"
     COMPLETED = "COMPLETED"
     CANCELLED = "CANCELLED"
+
+class Vehicle(Base):
+    __tablename__ = "vehicle"
+
+    id = Column(BigInteger, primary_key=True, index=True)
+    user_id = Column(BigInteger, ForeignKey("app_user.id"), nullable=False)
+    type = Column(String(100))
+    brand = Column(String(100))
+    model = Column(String(100))
+    year = Column(SmallInteger)
+    license_plate = Column(String(50))
+    is_default = Column(Boolean, nullable=False, default=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+
+
 
 
 class Ticket(Base):
