@@ -46,3 +46,5 @@ class MechanicAssignmentModel(Base):
     updated_at = Column(
         DateTime(timezone=True), server_default=text("NOW()")
     )
+    
+    ticket = relationship("Ticket", back_populates="assignments")

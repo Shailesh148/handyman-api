@@ -34,3 +34,4 @@ class Payment(Base):
     created_at = Column(
         DateTime(timezone=True), server_default=text("NOW()")
     )
+    ticket = relationship("Ticket", back_populates="payments")

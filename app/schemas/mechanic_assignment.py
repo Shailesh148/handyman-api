@@ -3,7 +3,6 @@ from typing import Optional
 
 
 
-
 class MechanicAssignment(BaseModel):
     user_id: int
     ticket_id: int

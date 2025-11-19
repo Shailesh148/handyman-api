@@ -12,6 +12,7 @@ from sqlalchemy import (
 from sqlalchemy import Column, BigInteger, String, SmallInteger, Boolean, ForeignKey, Enum, TIMESTAMP, func
 from .base import Base
 
+from sqlalchemy.orm import relationship
 
 class TicketStatus(str, enum.Enum):
     REQUESTED = "REQUESTED"
@@ -84,3 +85,8 @@ class Ticket(Base):
     updated_at = Column(
         DateTime(timezone=True), nullable=False, server_default=text("NOW()")
     )
+    
+    assignments = relationship("MechanicAssignmentModel", back_populates="ticket")
+    customer = relationship("AppUser", back_populates= "app_user_tickets")
+    payments = relationship("Payment", back_populates="ticket")
+    estimates = relationship("Estimate", back_populates="ticket")

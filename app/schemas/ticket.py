@@ -2,6 +2,11 @@ from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
+from .user import UserPublic
+from .estimate import EstimatePublic
+from .payment import PaymentPublic
+from typing import List
+from .mechanic_assignment import MechanicAssignmentRead
 
 class TicketStatus(str, Enum):
     REQUESTED = "REQUESTED"
@@ -33,8 +38,12 @@ class TicketPublic(BaseModel):
     customer_location_id: Optional[int]
     description: Optional[str]
     customer_id: int
+    customer: UserPublic
     requested_at: datetime
     preferred_payment_method: Optional[str]
+    payments: List[PaymentPublic]
+    estimates: List[EstimatePublic]
+    assignments: List[MechanicAssignmentRead]
     
     class Config:
         from_attributes = True

@@ -11,6 +11,7 @@ from app.models.user import AppUser
 from app.schemas.ticket import TicketCreate, TicketPublic
 from app.models.service_type import ServiceType
 from app.models.service_issue import ServiceIssue
+from sqlalchemy.orm import Session, joinedload
 
 router = APIRouter()
 
@@ -107,3 +108,19 @@ def fetch_user_ticket(
     )
     
     return tickets 
+
+
+
+# fetch a tickets data [ticket data + estimate data + payment data + user data + assignment data]
+@router.get("/id", response_model=List[TicketPublic])
+def fetch_user_ticket(
+    ticket_id: int, 
+    db: Session = Depends(get_db)
+):
+    ticket = db.query(Ticket).options(
+        joinedload(Ticket.estimates),
+        joinedload(Ticket.payments),
+        joinedload(Ticket.assignments)
+    ).filter(Ticket.id == ticket_id).all()
+    
+    return ticket 

@@ -9,6 +9,7 @@ from sqlalchemy import (
     text,
 )
 from .base import Base
+from sqlalchemy.orm import relationship
 
 
 class UserRole(str, enum.Enum):
@@ -38,3 +39,4 @@ class AppUser(Base):
     updated_at = Column(
         DateTime(timezone=True), server_default=text("NOW()")
     )
+    app_user_tickets = relationship("Ticket", back_populates= "customer")

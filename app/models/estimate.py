@@ -27,3 +27,5 @@ class Estimate(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     approved_at = Column(DateTime(timezone=True))
     rejected_at = Column(DateTime(timezone=True))
+    
+    ticket = relationship("Ticket", back_populates="estimates")
