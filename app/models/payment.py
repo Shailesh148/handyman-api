@@ -22,7 +22,7 @@ class Payment(Base):
     __tablename__ = 'payment'
 
     id = Column(BigInteger, primary_key=True)
-    ticket_id = Column(BigInteger, ForeignKey('ticket.id', ondelete='RESTRICT'), nullable=False)
+    ticket_id = Column(BigInteger, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
     amount = Column(Numeric(10, 2), nullable=False)
     currency = Column(CHAR(3), nullable=False, default='NPR')
     method = Column(Enum(PaymentMethod), nullable=False)
