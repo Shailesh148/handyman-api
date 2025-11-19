@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field
-
+from datetime import datetime
 
 class TicketStatus(str, Enum):
     REQUESTED = "REQUESTED"
@@ -22,15 +22,19 @@ class TicketCreate(BaseModel):
     vehicle_id: Optional[int] = None        # null for HOME services
     customer_location_id: int               # must belong to current user
     description: Optional[str] = Field(None, max_length=2000)
-
+    user_id: int
 
 class TicketPublic(BaseModel):
+    id: int
     ticket_code: str
     status: TicketStatus
     service_issue_id: int
     vehicle_id: Optional[int]
     customer_location_id: Optional[int]
     description: Optional[str]
-
+    customer_id: int
+    requested_at: datetime
+    preferred_payment_method: Optional[str]
+    
     class Config:
         from_attributes = True

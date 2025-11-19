@@ -12,7 +12,7 @@ class LocationCreate(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     is_primary: bool = False
-
+    user_id: int
 
 class LocationPublic(BaseModel):
     id: int

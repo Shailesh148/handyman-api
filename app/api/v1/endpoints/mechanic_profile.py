@@ -23,16 +23,9 @@ def create_mechanic(mechanic: MechanicCreate, db: Session = Depends(get_db)):
     #         status_code=status.HTTP_400_BAD_REQUEST,
     #         detail="Mechanic with this email already exists."
     #     )
-    existing_user_id = (
-        db.query(AppUser)
-        .filter(
-            AppUser.email == mechanic.email
-        )
-        .first()
-    )
     # Create new mechanic
     new_mechanic = MechanicProfile(
-        user_id=existing_user_id.id,
+        user_id=mechanic.user_id,
         base_location_id = mechanic.mechanic_location_id,
     )
 

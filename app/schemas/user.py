@@ -34,6 +34,7 @@ class UserRead(BaseModel):
 
 # 🔹 Public version: no DB id, no auth0_user_id
 class UserPublic(BaseModel):
+    id: int
     full_name: str
     phone: str
     email: Optional[EmailStr]

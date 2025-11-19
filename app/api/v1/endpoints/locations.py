@@ -16,21 +16,21 @@ router = APIRouter()
     "/", response_model=LocationPublic, summary="Add a location for current user"
 )
 def create_location(
-    email: str,
+    # email: str,
     location_in: LocationCreate,
     db: Session = Depends(get_db),
-    current_user: AppUser = Depends(get_current_user),
+    # current_user: AppUser = Depends(get_current_user),
 ):
     # If new location is primary, unset existing primary for this user
-    if location_in.is_primary:
-        (
-            db.query(Location)
-            .filter(Location.user_id == current_user.id, Location.is_primary == True)
-            .update({"is_primary": False})
-        )
+    # if location_in.is_primary:
+    #     (
+    #         db.query(Location)
+    #         .filter(Location.user_id == current_user.id, Location.is_primary == True)
+    #         .update({"is_primary": False})
+    #     )
 
     loc = Location(
-        user_id=current_user.id,
+        user_id=location_in.user_id,
         label=location_in.label,
         address_line1=location_in.address_line1,
         address_line2=location_in.address_line2,
@@ -52,13 +52,14 @@ def create_location(
     "/", response_model=List[LocationPublic], summary="List current user's locations"
 )
 def list_my_locations(
-    email: str,
+    # email: str,
+    user_id: str,
     db: Session = Depends(get_db),
-    current_user: AppUser = Depends(get_current_user),
+    # current_user: AppUser = Depends(get_current_user),
 ):
     locations = (
         db.query(Location)
-        .filter(Location.user_id == current_user.id)
+        .filter(Location.user_id == user_id)
         .order_by(Location.created_at.desc())
         .all()
     )

@@ -7,7 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     String,
     Text,
-    text,
+    text,Enum, CHAR, Numeric
 )
 from sqlalchemy import Column, BigInteger, String, SmallInteger, Boolean, ForeignKey, Enum, TIMESTAMP, func
 from .base import Base

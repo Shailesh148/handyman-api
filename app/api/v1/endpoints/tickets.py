@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
+from typing import List
 from app.utils.user_utils import get_current_user
 from app.core.db import get_db
 from app.models.location import Location
@@ -26,10 +26,10 @@ def generate_ticket_code() -> str:
     summary="Create a new ticket (job) for current user"
 )
 def create_ticket(
-    email: str,
+    # email: str,
     ticket_in: TicketCreate,
     db: Session = Depends(get_db),
-    current_user: AppUser = Depends(get_current_user),
+    # current_user: AppUser = Depends(get_current_user),
 ):
     # 1) Verify location belongs to current user
     # location = (
@@ -66,7 +66,7 @@ def create_ticket(
 
     ticket = Ticket(
         ticket_code=generate_ticket_code(),
-        customer_id=current_user.id,
+        customer_id=ticket_in.user_id,
         service_issue_id=service_issue.id,
         customer_location_id=ticket_in.customer_location_id,
         status=TicketStatus.REQUESTED,
@@ -81,3 +81,29 @@ def create_ticket(
     db.commit() 
     db.refresh(ticket) 
     return ticket
+
+
+
+
+# fetch user's ticket
+@router.get("/", response_model=List[TicketPublic])
+def fetch_user_ticket(
+    user_id: int, 
+    db: Session = Depends(get_db)
+):
+    tickets= (db.query(Ticket).
+        filter(Ticket.customer_id == user_id).all()
+    )
+    
+    return tickets 
+
+# fetch all non completed pending tickets
+@router.get("/all", response_model=List[TicketPublic])
+def fetch_user_ticket(
+    db: Session = Depends(get_db)
+):
+    tickets= (db.query(Ticket).
+        filter(Ticket.status != "COMPLETED" and Ticket.status != "CANCELLED").all()
+    )
+    
+    return tickets 

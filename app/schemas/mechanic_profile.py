@@ -3,7 +3,7 @@ from typing import Optional
 from typing import List
 
 class MechanicCreate(BaseModel):
-    email: EmailStr
+    user_id: int
     service_type_ids: List[int]
     mechanic_location_id: int
 
