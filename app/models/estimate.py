@@ -6,6 +6,8 @@ import enum
 
 from .base import Base
 
+
+
 # Define the Enum in Python to match your PostgreSQL enum
 class EstimateStatusEnum(enum.Enum):
     PENDING_CUSTOMER_APPROVAL = "PENDING_CUSTOMER_APPROVAL"

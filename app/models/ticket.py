@@ -27,6 +27,13 @@ class TicketStatus(str, enum.Enum):
     COMPLETED = "COMPLETED"
     CANCELLED = "CANCELLED"
 
+
+ESTIMATE_TO_TICKET_STATUS = {
+    "PENDING_CUSTOMER_APPROVAL": TicketStatus.ESTIMATE_PROVIDED,
+    "APPROVED": TicketStatus.ESTIMATE_APPROVED,
+    "REJECTED": TicketStatus.ESTIMATE_REJECTED
+}
+
 class Vehicle(Base):
     __tablename__ = "vehicle"
 
