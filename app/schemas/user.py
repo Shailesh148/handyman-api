@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -17,6 +17,7 @@ class UserCreate(BaseModel):
     email: Optional[EmailStr] = None
     # For now you can keep this fixed to CUSTOMER on frontend if you like
     role: UserRole = UserRole.CUSTOMER
+    service_type_ids: Optional[List[int]] = None
 
 
 class UserRead(BaseModel):

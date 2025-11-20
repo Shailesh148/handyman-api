@@ -8,6 +8,9 @@ from app.core.db import get_db
 from app.core.security import require_auth
 from app.models.user import AppUser
 from app.schemas.user import UserCreate, UserRead, UserPublic
+from app.schemas.mechanic_profile import MechanicCreate
+from app.models.mechanic_profile import MechanicProfile
+from app.models.mechanic_service_type import MechanicServiceType
 
 router = APIRouter()
 
@@ -53,6 +56,24 @@ def create_user(
     )
 
     db.add(user)
+    db.flush()
+    if user_in.role == "MECHANIC":
+        new_mechanic = MechanicProfile(
+            user_id=user.id,
+            # base_location_id = mechanic.mechanic_location_id,
+        )
+
+        db.add(new_mechanic)
+        db.flush()
+        
+        for each_service_id in user_in.service_type_ids:
+            new_mechanic_service = MechanicServiceType(
+                mechanic_id = new_mechanic.id,
+                service_type_id = each_service_id
+            )
+
+            db.add(new_mechanic_service)
+        
     try:
         db.commit()
     except IntegrityError as e:
