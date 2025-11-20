@@ -11,7 +11,8 @@ from app.schemas.user import UserCreate, UserRead, UserPublic
 from app.schemas.mechanic_profile import MechanicCreate
 from app.models.mechanic_profile import MechanicProfile
 from app.models.mechanic_service_type import MechanicServiceType
-
+import random
+import string
 router = APIRouter()
 
 
@@ -46,7 +47,7 @@ def create_user(
     #         status_code=status.HTTP_409_CONFLICT,
     #         detail="User already registered",
     #     )
-    auth0_user_id = "1234567890"
+    auth0_user_id = ''.join(random.choices(string.digits, k=10))
     user = AppUser(
         auth0_user_id=auth0_user_id,
         full_name=user_in.full_name,
