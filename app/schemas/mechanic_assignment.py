@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class MechanicAssignment(BaseModel):
-    user_id: int
+    mechanic_user_id: int
     ticket_id: int
     amount: int
     payment_method: str

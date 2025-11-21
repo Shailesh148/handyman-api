@@ -18,7 +18,7 @@ router =APIRouter()
 def assign_mechanic(mechanic_assignment: MechanicAssignment, db: Session =  Depends(get_db)):
     new_assignment =  MechanicAssignmentModel(
         ticket_id = mechanic_assignment.ticket_id,
-        mechanic_id = mechanic_assignment.user_id
+        mechanic_id = mechanic_assignment.mechanic_user_id
     )  
     
     
@@ -32,7 +32,7 @@ def assign_mechanic(mechanic_assignment: MechanicAssignment, db: Session =  Depe
     # create an estimate
     new_estimate = Estimate(
         ticket_id = mechanic_assignment.ticket_id,
-        mechanic_id = mechanic_assignment.user_id,
+        mechanic_id = mechanic_assignment.mechanic_user_id,
         amount = mechanic_assignment.amount,
         status = "APPROVED"
     )
