@@ -23,9 +23,9 @@ class TicketStatus(str, Enum):
 
 
 class TicketCreate(BaseModel):
-    category: str
+    service: str
     vehicle_id: Optional[int] = None        # null for HOME services
-    customer_location_id: int               # must belong to current user
+    customer_location_id: Optional[int] = None               # must belong to current user
     description: Optional[str] = Field(None, max_length=2000)
     user_id: int
 

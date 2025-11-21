@@ -51,14 +51,14 @@ def create_ticket(
     service_type = (
         db.query(ServiceType)
         .filter(
-            ServiceType.name == ticket_in.category
+            ServiceType.name == ticket_in.service
         )
         .first()
     )
     
     service_issue = ServiceIssue(
         service_type_id = service_type.id,
-        name = ticket_in.category,
+        name = ticket_in.service,
         description = ticket_in.description
     )
 
