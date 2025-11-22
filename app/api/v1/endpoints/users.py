@@ -111,3 +111,27 @@ def get_user_by_email(
         )
 
     return user
+
+
+@router.get("/by-phone", response_model=UserPublic)
+def get_user_by_phone(
+    phone: str,
+    db: Session = Depends(get_db),
+    token_payload: Dict[str, Any] = Depends(require_auth),
+):
+    """
+    Fetch a user by email.
+
+    - Requires Auth0 token in Authorization header
+    - Returns public user data only (no DB id, no auth0_user_id)
+    """
+    print(phone)
+    user = db.query(AppUser).filter(AppUser.phone == phone).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    return user
