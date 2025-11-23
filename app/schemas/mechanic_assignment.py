@@ -16,7 +16,7 @@ class MechanicTicketRead(BaseModel):
     id: int
     ticket_code: str
     status: str
-    service_issue_id: int
+    service_type_id: int
     vehicle_id: Optional[int]
     customer_location_id: Optional[int]
     description: Optional[str]

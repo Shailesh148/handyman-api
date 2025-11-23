@@ -26,26 +26,8 @@ def assign_mechanic(mechanic_assignment: MechanicAssignment, db: Session =  Depe
     db.flush()
     
     db.query(Ticket).filter(Ticket.id == mechanic_assignment.ticket_id).update(
-        {"status": "ON_THE_WAY"}, synchronize_session=False
+        {"status": "ASSIGNED"}, synchronize_session=False
     )
-    
-    # create an estimate
-    new_estimate = Estimate(
-        ticket_id = mechanic_assignment.ticket_id,
-        mechanic_id = mechanic_assignment.mechanic_user_id,
-        amount = mechanic_assignment.amount,
-        status = "APPROVED"
-    )
-    
-    db.add(new_estimate)
-    
-    # create payment
-    payment = Payment(
-        ticket_id = mechanic_assignment.ticket_id,
-        amount = mechanic_assignment.amount,
-        method = mechanic_assignment.payment_method
-    )
-    db.add(payment)
     
     db.commit()
     db.refresh(new_assignment)

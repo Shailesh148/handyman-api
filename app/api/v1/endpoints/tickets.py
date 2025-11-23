@@ -10,7 +10,7 @@ from app.models.ticket import Ticket, TicketStatus
 from app.models.user import AppUser
 from app.schemas.ticket import TicketCreate, TicketPublic
 from app.models.service_type import ServiceType
-from app.models.service_issue import ServiceIssue
+# from app.models.service_issue import ServiceIssue
 from sqlalchemy.orm import Session, joinedload
 
 router = APIRouter()
@@ -56,19 +56,19 @@ def create_ticket(
         .first()
     )
     
-    service_issue = ServiceIssue(
-        service_type_id = service_type.id,
-        name = ticket_in.service,
-        description = ticket_in.description
-    )
+    # service_issue = ServiceIssue(
+    #     service_type_id = service_type.id,
+    #     name = ticket_in.service,
+    #     description = ticket_in.description
+    # )
 
-    db.add(service_issue)
-    db.flush()
+    # db.add(service_issue)
+    # db.flush()
 
     ticket = Ticket(
         ticket_code=generate_ticket_code(),
         customer_id=ticket_in.user_id,
-        service_issue_id=service_issue.id,
+        service_type_id=service_type.id,
         customer_location_id=ticket_in.customer_location_id,
         status=TicketStatus.REQUESTED,
         description=ticket_in.description,

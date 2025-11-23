@@ -21,3 +21,5 @@ class ServiceType(Base):
 
     name = Column(String(100))
     description = Column(Text)
+    
+    ticket = relationship("Ticket", back_populates="service_type")

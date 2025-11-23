@@ -7,6 +7,7 @@ from .estimate import EstimatePublic
 from .payment import PaymentPublic
 from typing import List
 from .mechanic_assignment import MechanicAssignmentRead
+from .service_type import ServiceTypePublic
 
 class TicketStatus(str, Enum):
     REQUESTED = "REQUESTED"
@@ -33,7 +34,7 @@ class TicketPublic(BaseModel):
     id: int
     ticket_code: str
     status: TicketStatus
-    service_issue_id: int
+    service_type: ServiceTypePublic
     vehicle_id: Optional[int]
     customer_location_id: Optional[int]
     description: Optional[str]

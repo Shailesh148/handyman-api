@@ -6,11 +6,17 @@ from sqlalchemy import (
 from app.models.estimate import EstimateStatusEnum
 
 class EstimateUpdate(BaseModel):
-    id: int
+    id: Optional[int] = None
     amount: int
     status: str
     ticket_id: int
     payment_id: int
+    
+    
+class EstimateCreate(BaseModel):
+    amount: int
+    ticket_id: int
+    mechanic_id: int
     
 
 

@@ -20,9 +20,9 @@ class TicketStatus(str, enum.Enum):
     ASSIGNED = "ASSIGNED"
     ACCEPTED = "ACCEPTED"
     ON_THE_WAY = "ON_THE_WAY"
-    ESTIMATE_PROVIDED = "ESTIMATE_PROVIDED"
-    ESTIMATE_APPROVED = "ESTIMATE_APPROVED"
-    ESTIMATE_REJECTED = "ESTIMATE_REJECTED"
+    ESTIMATE_PROVIDED = "PENDING_CUSTOMER_APPROVAL"
+    ESTIMATE_APPROVED = "WORK_IN_PROGRESS"
+    ESTIMATE_REJECTED = "REJECTED"
     WORK_STARTED = "WORK_STARTED"
     COMPLETED = "COMPLETED"
     CANCELLED = "CANCELLED"
@@ -59,8 +59,8 @@ class Ticket(Base):
     customer_id = Column(
         BigInteger, ForeignKey("app_user.id"), nullable=False
     )
-    service_issue_id = Column(
-        BigInteger, ForeignKey("service_issue.id"), nullable=False
+    service_type_id = Column(
+        BigInteger, ForeignKey("service_type.id"), nullable=False
     )
     vehicle_id = Column(
         BigInteger, ForeignKey("vehicle.id"), nullable=True
@@ -97,3 +97,4 @@ class Ticket(Base):
     customer = relationship("AppUser", back_populates= "app_user_tickets")
     payments = relationship("Payment", back_populates="ticket")
     estimates = relationship("Estimate", back_populates="ticket")
+    service_type = relationship("ServiceType", back_populates="ticket")
