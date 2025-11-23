@@ -40,6 +40,10 @@ def create_estimate(
     estimate_in: EstimateCreate, 
     db: Session = Depends(get_db)
 ):
+    db.query(Ticket).filter(Ticket.id == estimate_in.ticket_id).update(
+        {"status": "ESTIMATE_PROVIDED"}, synchronize_session=False
+    )
+    
     # estimate create
     # create an estimate
     new_estimate = Estimate(
@@ -56,7 +60,7 @@ def create_estimate(
         ticket_id = estimate_in.ticket_id,
         amount = estimate_in.amount,
         method = "CASH",
-        status = "ESTIMATE_PROVIDED"
+        status = "PENDING"
     )
     db.add(payment)
     

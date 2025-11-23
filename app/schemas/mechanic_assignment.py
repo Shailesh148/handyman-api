@@ -9,8 +9,6 @@ from sqlalchemy import (
 class MechanicAssignment(BaseModel):
     mechanic_user_id: int
     ticket_id: int
-    amount: int
-    payment_method: str
     
 class MechanicTicketRead(BaseModel):
     id: int
