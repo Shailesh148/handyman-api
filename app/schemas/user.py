@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr, Field
-
+from .service_type import ServiceTypePublic
 
 class UserRole(str, Enum):
     CUSTOMER = "CUSTOMER"
@@ -41,6 +41,7 @@ class UserPublic(BaseModel):
     email: Optional[EmailStr]
     role: UserRole
     is_active: bool
+    mechanic_services: Optional[List[ServiceTypePublic]] = None
 
     class Config:
         from_attributes = True

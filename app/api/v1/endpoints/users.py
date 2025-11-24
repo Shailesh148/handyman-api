@@ -11,7 +11,10 @@ from app.schemas.user import UserCreate, UserRead, UserPublic
 from app.schemas.mechanic_profile import MechanicCreate
 from app.models.mechanic_profile import MechanicProfile
 from app.models.mechanic_service_type import MechanicServiceType
+from app.models.service_type import ServiceType
+from app.schemas.service_type import ServiceTypePublic
 import random
+from typing import List
 import string
 router = APIRouter()
 
@@ -135,3 +138,51 @@ def get_user_by_phone(
         )
 
     return user
+
+@router.get("/mechanic/all", response_model=List[UserPublic])
+def get_all_mechanics(
+    db: Session = Depends(get_db),
+    token_payload: Dict[str, Any] = Depends(require_auth),
+):
+    """
+    Fetch a user by email.
+
+    - Requires Auth0 token in Authorization header
+    - Returns public user data only (no DB id, no auth0_user_id)
+    """
+    all_mechanic_user = db.query(AppUser).filter(AppUser.role == 'MECHANIC').all()
+    result = []
+
+    for each_mechanic_user in all_mechanic_user:
+        mechanic_profile = db.query(MechanicProfile).filter(each_mechanic_user.id == MechanicProfile.user_id).first()
+        service_links = db.query(MechanicServiceType).filter(MechanicServiceType.mechanic_id == mechanic_profile.id).all()
+        service_types_public = []
+
+        for link in service_links:
+            st = db.query(ServiceType).filter(
+                ServiceType.id == link.service_type_id
+            ).first()
+
+            if st:
+                service_types_public.append(
+                    ServiceTypePublic(
+                        id=st.id,
+                        category_id=st.category_id,
+                        name=st.name,
+                        description=st.description,
+                    )
+                )
+        user_public = UserPublic(
+            id=each_mechanic_user.id,
+            full_name=each_mechanic_user.full_name,
+            phone=each_mechanic_user.phone,
+            email=each_mechanic_user.email,
+            role=each_mechanic_user.role,
+            is_active=each_mechanic_user.is_active,
+            mechanic_services=service_types_public,
+        )
+        # Attach to user object
+        result.append(user_public)
+
+
+    return result

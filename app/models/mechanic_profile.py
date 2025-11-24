@@ -13,6 +13,7 @@ from sqlalchemy.orm import relationship
 
 from .base import Base
 import enum
+from .user import AppUser
 
 
 class MechanicProfile(Base):

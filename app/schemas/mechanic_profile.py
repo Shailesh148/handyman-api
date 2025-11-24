@@ -9,3 +9,6 @@ class MechanicCreate(BaseModel):
 
 class MechanicResponse(BaseModel):
     total_jobs_completed: int
+
+
+
