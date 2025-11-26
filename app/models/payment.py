@@ -14,7 +14,7 @@ class PaymentMethod(enum.Enum):
 
 class PaymentStatus(enum.Enum):
     PENDING = "PENDING"
-    SUCCCESS = "SUCCESS"
+    SUCCESS = "SUCCESS"
     FAILED = "FAILED"
     REFUNDED = "REFUNDED"
 

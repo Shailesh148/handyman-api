@@ -6,9 +6,10 @@ from typing import List
 from app.utils.user_utils import get_current_user
 from app.core.db import get_db
 from app.models.location import Location
-from app.models.ticket import Ticket, TicketStatus
+from app.models.ticket import Ticket, TicketStatus, TICKET_TO_PAYMENT_STATUS
 from app.models.user import AppUser
-from app.schemas.ticket import TicketCreate, TicketPublic
+from app.schemas.ticket import TicketCreate, TicketPublic, TicketUpdate
+from app.models.payment import Payment
 from app.models.service_type import ServiceType
 # from app.models.service_issue import ServiceIssue
 from sqlalchemy.orm import Session, joinedload
@@ -124,3 +125,30 @@ def fetch_user_ticket(
     ).filter(Ticket.id == ticket_id).all()
     
     return ticket 
+
+
+
+@router.patch(
+    "/{ticket_id}", status_code=status.HTTP_201_CREATED,
+    summary="Create a new ticket (job) for current user"
+)
+def update_ticket(
+    ticket_id: int,
+    ticket_in: TicketUpdate,
+    db: Session = Depends(get_db),
+    # current_user: AppUser = Depends(get_current_user),
+):
+    
+    
+    db.query(Ticket).filter(Ticket.id == ticket_id).update(
+        {"status": ticket_in.status}, synchronize_session=False
+    )
+
+
+    # payment status update here
+    db.query(Payment).filter(Payment.id == ticket_in.payment_id).update(
+        {"status": TICKET_TO_PAYMENT_STATUS.get(ticket_in.status)}, synchronize_session=False
+    )
+    db.commit() 
+    
+    return "updated"

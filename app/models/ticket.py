@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy import Column, BigInteger, String, SmallInteger, Boolean, ForeignKey, Enum, TIMESTAMP, func
 from .base import Base
-
+from .payment import PaymentStatus
 from sqlalchemy.orm import relationship
 
 class TicketStatus(str, enum.Enum):
@@ -34,6 +34,11 @@ ESTIMATE_TO_TICKET_STATUS = {
     "PENDING_CUSTOMER_APPROVAL": TicketStatus.ESTIMATE_PROVIDED,
     "APPROVED": TicketStatus.ESTIMATE_APPROVED,
     "REJECTED": TicketStatus.ESTIMATE_REJECTED
+}
+
+
+TICKET_TO_PAYMENT_STATUS = {
+    "COMPLETED": PaymentStatus.SUCCESS
 }
 
 class Vehicle(Base):

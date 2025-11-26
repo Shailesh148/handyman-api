@@ -33,6 +33,10 @@ class TicketCreate(BaseModel):
     description: Optional[str] = Field(None, max_length=2000)
     user_id: int
 
+class TicketUpdate(BaseModel):
+    status: str
+    payment_id: int
+
 class TicketPublic(BaseModel):
     id: int
     ticket_code: str
