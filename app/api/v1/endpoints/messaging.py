@@ -3,7 +3,6 @@ from firebase_admin import messaging
 from fastapi import APIRouter, status, Depends
 from app.schemas.messaging import NotificationQuery
 
-
 router =APIRouter()
 
 
@@ -17,7 +16,6 @@ def send_push_notification(notification_query: NotificationQuery):
         ),
         # data=notification_query.body or {}
     )
-
     try:
         response = messaging.send(message)
         print("Successfully sent message:", response)

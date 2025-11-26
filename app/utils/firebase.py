@@ -3,6 +3,7 @@ import firebase_admin
 from typing import Optional
 from google.cloud.firestore_v1 import Client
 from firebase_admin import firestore, auth
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
 
 
