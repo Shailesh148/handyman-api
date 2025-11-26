@@ -23,6 +23,6 @@ app.add_middleware(
     max_age=3600,
 )
 
-initialize_firebase()
+# initialize_firebase()
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

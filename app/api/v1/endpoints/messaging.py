@@ -17,10 +17,10 @@ def send_push_notification(notification_query: NotificationQuery):
         ),
         # data=notification_query.body or {}
     )
-    data = fetch_hello_docs()
+    # data = fetch_hello_docs()
     try:
         response = messaging.send(message)
         print("Successfully sent message:", response)
     except Exception as e:
         print("Error sending message:", e)
-    return data
+    return "data"
