@@ -28,25 +28,10 @@ def generate_ticket_code() -> str:
     summary="Create a new ticket (job) for current user"
 )
 def create_ticket(
-    # email: str,
     ticket_in: TicketCreate,
     db: Session = Depends(get_db),
-    # current_user: AppUser = Depends(get_current_user),
 ):
-    # 1) Verify location belongs to current user
-    # location = (
-    #     db.query(Location)
-    #     .filter(
-    #         Location.id == ticket_in.customer_location_id,
-    #         Location.user_id == current_user.id,
-    #     )
-    #     .first()
-    # )
-    # if not location:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail="Invalid location: does not belong to current user",
-    #     )
+    
 
     # TODO (optional): verify service_issue_id exists; verify vehicle_id belongs to user
     service_type = (
@@ -56,15 +41,6 @@ def create_ticket(
         )
         .first()
     )
-    
-    # service_issue = ServiceIssue(
-    #     service_type_id = service_type.id,
-    #     name = ticket_in.service,
-    #     description = ticket_in.description
-    # )
-
-    # db.add(service_issue)
-    # db.flush()
 
     ticket = Ticket(
         ticket_code=generate_ticket_code(),
@@ -73,6 +49,7 @@ def create_ticket(
         customer_location_id=ticket_in.customer_location_id,
         status=TicketStatus.REQUESTED,
         description=ticket_in.description,
+        photo_url = ticket_in.photo_url
     )
     
     # if "vehicle_id" in ticket_in:

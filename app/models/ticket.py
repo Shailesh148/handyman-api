@@ -100,6 +100,10 @@ class Ticket(Base):
         DateTime(timezone=True), nullable=False, server_default=text("NOW()")
     )
     
+    photo_url = Column(
+        Text
+    )
+    
     assignments = relationship("MechanicAssignmentModel", back_populates="ticket")
     customer = relationship("AppUser", back_populates= "app_user_tickets")
     payments = relationship("Payment", back_populates="ticket")

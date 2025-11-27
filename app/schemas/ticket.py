@@ -32,6 +32,7 @@ class TicketCreate(BaseModel):
     customer_location_id: Optional[int] = None               # must belong to current user
     description: Optional[str] = Field(None, max_length=2000)
     user_id: int
+    photo_url: Optional[str] = None
 
 class TicketUpdate(BaseModel):
     status: str
@@ -52,6 +53,7 @@ class TicketPublic(BaseModel):
     payments: List[PaymentPublic]
     estimates: List[EstimatePublic]
     assignments: List[MechanicAssignmentRead]
+    photo_url: Optional[str] = None
     
     class Config:
         from_attributes = True
