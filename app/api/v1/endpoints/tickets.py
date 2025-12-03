@@ -63,8 +63,8 @@ def create_ticket(
     db.refresh(ticket)
     
     # add a thread to send notifications to operator 
-    send_notification("ADMIN", "ticket_created",)
-    # thread.start()
+    thread = threading.Thread(send_notification("ADMIN", "ticket_created",))
+    thread.start()
     
     return ticket
 
@@ -134,7 +134,7 @@ def update_ticket(
     )
     db.commit() 
     
-    send_notification("CUSTOMER", "ticket_completed", ticket_id)
-    # thread.start()
+    thread = threading.Thread(send_notification("CUSTOMER", "ticket_completed", ticket_id))
+    thread.start()
     
     return "updated"
