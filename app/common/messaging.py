@@ -31,6 +31,9 @@ def send_notification(user_role: str, event: str, ticket_id: str = None):
 					title=notification_query.get("title", ""),
 					body=notification_query.get("body", "")
 				),
+				data = {
+    				"url": "https://101inc-frontend.vercel.app/"
+  				}
 			)
 			try:
 				response = messaging.send(message)
