@@ -6,6 +6,8 @@ from app.core.db import get_db
 from app.models.estimate import Estimate
 from app.models.ticket import ESTIMATE_TO_TICKET_STATUS, Ticket
 from app.models.payment import Payment
+import threading
+from app.common.messaging import send_notification
 
 router = APIRouter()
 
@@ -32,6 +34,10 @@ def modify_estimate(
     )
     
     db.commit()
+
+    thread = threading.Thread(target= send_notification, args= ("ADMIN", "estimate_accepted" if estimate_in.status == "ACCEPTED" else "estimate_rejected", db))
+    thread.start()
+    
     return "Updated"
 
 
@@ -65,4 +71,7 @@ def create_estimate(
     db.add(payment)
     
     db.commit()
+    
+    thread = threading.Thread(target= send_notification, args= ("CUSTOMER", "ticket_estimated", db, estimate_in.ticket_id,))
+    thread.start()
     return "Updated"

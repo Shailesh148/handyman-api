@@ -123,7 +123,6 @@ def update_ticket(
     # current_user: AppUser = Depends(get_current_user),
 ):
     
-    
     db.query(Ticket).filter(Ticket.id == ticket_id).update(
         {"status": ticket_in.status}, synchronize_session=False
     )
@@ -134,5 +133,8 @@ def update_ticket(
         {"status": TICKET_TO_PAYMENT_STATUS.get(ticket_in.status)}, synchronize_session=False
     )
     db.commit() 
+    
+    thread = threading.Thread(target= send_notification, args= ("CUSTOMER", "ticket_completed", db, ticket_id))
+    thread.start()
     
     return "updated"
