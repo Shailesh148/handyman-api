@@ -5,10 +5,12 @@ from sqlalchemy.orm import Session
 from app.models.user import AppUser
 from app.models.user_device import UserDevice
 from app.models.ticket import Ticket
-
+from app.core.db import get_db
+from app.core.db import SessionLocal
 from fastapi import APIRouter, status, Depends
 
-def send_notification(user_role: str, event: str, db: Session, ticket_id: str = None):
+def send_notification(user_role: str, event: str, ticket_id: str = None):
+	db = SessionLocal()
 	notification_query = events_list_data.get(event)
 	user_data = []
 	if user_role == "ADMIN":
@@ -17,7 +19,7 @@ def send_notification(user_role: str, event: str, db: Session, ticket_id: str = 
 		ticket_data = db.query(Ticket).filter(Ticket.id == ticket_id).first()
 
 		user_data = db.query(AppUser).filter(AppUser.id == ticket_data.customer_id).all() 
-	
+
 	for each_user_data in user_data:
 		print(each_user_data.id)
 		user_devices = db.query(UserDevice).filter(UserDevice.user_id == each_user_data.id).all()

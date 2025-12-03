@@ -35,7 +35,7 @@ def modify_estimate(
     
     db.commit()
 
-    thread = threading.Thread(target= send_notification, args= ("ADMIN", "estimate_accepted" if estimate_in.status == "ACCEPTED" else "estimate_rejected", db))
+    thread = threading.Thread(target= send_notification, args= ("ADMIN", "estimate_accepted" if estimate_in.status == "ACCEPTED" else "estimate_rejected"))
     thread.start()
     
     return "Updated"
@@ -72,6 +72,6 @@ def create_estimate(
     
     db.commit()
     
-    thread = threading.Thread(target= send_notification, args= ("CUSTOMER", "ticket_estimated", db, estimate_in.ticket_id,))
+    thread = threading.Thread(target= send_notification, args= ("CUSTOMER", "ticket_estimated", estimate_in.ticket_id,))
     thread.start()
     return "Updated"
