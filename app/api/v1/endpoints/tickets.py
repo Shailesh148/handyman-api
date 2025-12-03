@@ -13,6 +13,8 @@ from app.models.payment import Payment
 from app.models.service_type import ServiceType
 # from app.models.service_issue import ServiceIssue
 from sqlalchemy.orm import Session, joinedload
+from app.common.messaging import send_notification
+import threading
 
 router = APIRouter()
 
@@ -58,7 +60,12 @@ def create_ticket(
     db.add(ticket)
 
     db.commit() 
-    db.refresh(ticket) 
+    db.refresh(ticket)
+    
+    # add a thread to send notifications to operator 
+    thread = threading.Thread(target= send_notification, args= ("ADMIN", "ticket_created", db,))
+    thread.start()
+    
     return ticket
 
 
