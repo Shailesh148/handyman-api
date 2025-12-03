@@ -35,7 +35,7 @@ def modify_estimate(
     
     db.commit()
 
-    send_notification("ADMIN", "estimate_accepted" if estimate_in.status == "ACCEPTED" else "estimate_rejected")
+    send_notification("ADMIN", "estimate_accepted" if estimate_in.status == "APPROVED" else "estimate_rejected")
     # thread.start()
     
     return "Updated"
