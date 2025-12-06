@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
+from .inventory import InventoryPublic
 
 
 class GarageCreate(BaseModel):
@@ -19,7 +20,7 @@ class GaragePublic(BaseModel):
 	address: Optional[str]
 	latitude: Optional[float]
 	longitude: Optional[float]
-
+	inventory: Optional[List[InventoryPublic]] = None
 	class Config:
 		from_attributes = True
 

@@ -6,6 +6,7 @@ from sqlalchemy import (
 	String,
 )
 from .base import Base
+from sqlalchemy.orm import relationship
 
 
 class ItemType(str, enum.Enum):
@@ -21,3 +22,4 @@ class Item(Base):
 	item_type = Column(Enum(ItemType, name="item_type"), nullable=False)
 	unit = Column(String(50), nullable=True)
 
+	inventory = relationship("Inventory", back_populates="item")

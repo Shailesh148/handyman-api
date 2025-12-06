@@ -17,6 +17,7 @@ from app.schemas.inventory import (
 	InventoryPublic,
 	StockAddRequest,
 	UseItemRequest,
+	InventoryItemDetail,
 )
 
 
@@ -121,6 +122,39 @@ def create_inventory_record(inv_in: InventoryCreate, db: Session = Depends(get_d
 	db.commit()
 	db.refresh(inv)
 	return inv
+
+
+@router.get("/garages/{garage_id}", response_model=GaragePublic)
+def fetch_garage_inventory(garage_id: int, db: Session = Depends(get_db)):
+	garage = db.query(Garage).filter(Garage.id == garage_id).first()
+	# if not garage:
+	# 	raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Garage not found")
+
+	# rows = (
+	# 	db.query(Inventory, Item, Garage)
+	# 	.join(Item, Inventory.item_id == Item.id)
+	# 	.join(Garage, Inventory.garage_id == Garage.id)
+	# 	.filter(Inventory.garage_id == garage_id)
+	# 	.all()
+	# )
+
+	# result: List[InventoryItemDetail] = []
+	# for inv, item, gar in rows:
+	# 	result.append(
+	# 		InventoryItemDetail(
+	# 			id=inv.id,
+	# 			quantity=inv.quantity or 0,
+	# 			minimum_quantity=inv.minimum_quantity or 0,
+	# 			maximum_quantity=inv.maximum_quantity or 0,
+	# 			item=ItemPublic(
+	# 				id=item.id,
+	# 				name=item.name,
+	# 				item_type=item.item_type,  # enum is fine with Pydantic
+	# 				unit=item.unit,
+	# 			),
+	# 		)
+	# 	)
+	return garage
 
 
 @router.post("/add_item", response_model=InventoryPublic)

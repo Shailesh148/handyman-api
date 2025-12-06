@@ -25,10 +25,10 @@ class Garage(Base):
 	created_at = Column(DateTime(timezone=True), server_default=text("NOW()"))
 
 	staff = relationship("GarageUser", back_populates="garage", cascade="all, delete-orphan")
-
+	inventory = relationship("Inventory", back_populates="garage")
 
 class GarageUser(Base):
-	__tablename__ = "gara_users"
+	__tablename__ = "garage_users"
 	__table_args__ = (
 		UniqueConstraint("garage_id", "user_id", name="uix_garage_user"),
 	)

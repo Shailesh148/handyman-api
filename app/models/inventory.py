@@ -28,6 +28,7 @@ class Inventory(Base):
 	minimum_quantity = Column(Integer, nullable=False, server_default="0")
 	maximum_quantity = Column(Integer, nullable=False, server_default="0")
 	updated_at = Column(DateTime(timezone=True), server_default=text("NOW()"))
+	garage = relationship("Garage", back_populates="inventory")
 
-	item = relationship("Item")
+	item = relationship("Item", back_populates="inventory")
 

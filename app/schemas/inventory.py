@@ -21,9 +21,17 @@ class InventoryPublic(BaseModel):
 	quantity: int
 	minimum_quantity: int
 	maximum_quantity: int
-
+	item: ItemPublic
 	class Config:
 		from_attributes = True
+
+
+class InventoryItemDetail(BaseModel):
+	id: int
+	quantity: int
+	minimum_quantity: int
+	maximum_quantity: int
+	item: ItemPublic
 
 
 class StockAddRequest(BaseModel):
