@@ -10,6 +10,7 @@ class GarageCreate(BaseModel):
 	address: Optional[str] = None
 	latitude: Optional[float] = None
 	longitude: Optional[float] = None
+	type: str
 
 
 class GaragePublic(BaseModel):
@@ -21,8 +22,23 @@ class GaragePublic(BaseModel):
 	latitude: Optional[float]
 	longitude: Optional[float]
 	inventory: Optional[List[InventoryPublic]] = None
+	type: str
 	class Config:
 		from_attributes = True
+  
+class AllGaragesPublic(BaseModel):
+	id: int
+	name: str
+	phone: Optional[str]
+	email: Optional[str]
+	address: Optional[str]
+	latitude: Optional[float]
+	longitude: Optional[float]
+	type: str
+	class Config:
+		from_attributes = True
+
+
 
 
 class GarageUserAssign(BaseModel):

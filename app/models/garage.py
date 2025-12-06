@@ -23,7 +23,8 @@ class Garage(Base):
 	latitude = Column(String(50), nullable=True)
 	longitude = Column(String(50), nullable=True)
 	created_at = Column(DateTime(timezone=True), server_default=text("NOW()"))
-
+	type = Column(String(100))
+ 
 	staff = relationship("GarageUser", back_populates="garage", cascade="all, delete-orphan")
 	inventory = relationship("Inventory", back_populates="garage")
 

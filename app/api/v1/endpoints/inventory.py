@@ -10,7 +10,7 @@ from app.models.item import Item
 from app.models.inventory import Inventory
 from app.models.inventory_transaction import InventoryTransaction, InventoryTransactionType
 
-from app.schemas.garage import GarageCreate, GaragePublic, GarageUserAssign
+from app.schemas.garage import GarageCreate, GaragePublic, GarageUserAssign, AllGaragesPublic
 from app.schemas.item import ItemCreate, ItemPublic
 from app.schemas.inventory import (
 	InventoryCreate,
@@ -32,6 +32,12 @@ def _validate_owner_ids(garage_id: Optional[int], operator_user_id: Optional[int
 		)
 
 
+@router.get("/garages", response_model=List[AllGaragesPublic])
+def get_all_garages(db: Session = Depends(get_db)):
+	garages = db.query(Garage).all()
+	return garages
+
+
 @router.post("/garages", response_model=GaragePublic, status_code=status.HTTP_201_CREATED)
 def create_garage(garage_in: GarageCreate, db: Session = Depends(get_db)):
 	garage = Garage(
@@ -41,6 +47,7 @@ def create_garage(garage_in: GarageCreate, db: Session = Depends(get_db)):
 		address=garage_in.address,
 		latitude=garage_in.latitude,
 		longitude=garage_in.longitude,
+        type= garage_in.type
 	)
 	db.add(garage)
 	db.commit()
@@ -79,6 +86,11 @@ def create_item(item_in: ItemCreate, db: Session = Depends(get_db)):
 	db.commit()
 	db.refresh(item)
 	return item
+
+@router.get("/items", response_model=List[ItemPublic])
+def get_all_items(db: Session = Depends(get_db)):
+	items = db.query(Item).all()
+	return items
 
 
 @router.post("/", response_model=InventoryPublic, status_code=status.HTTP_201_CREATED)
