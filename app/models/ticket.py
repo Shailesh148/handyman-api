@@ -104,6 +104,10 @@ class Ticket(Base):
         Text
     )
     
+    location_url = Column(
+        Text
+    )
+    
     assignments = relationship("MechanicAssignmentModel", back_populates="ticket")
     customer = relationship("AppUser", back_populates= "app_user_tickets")
     payments = relationship("Payment", back_populates="ticket")

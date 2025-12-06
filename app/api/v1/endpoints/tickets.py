@@ -51,7 +51,8 @@ def create_ticket(
         customer_location_id=ticket_in.customer_location_id,
         status=TicketStatus.REQUESTED,
         description=ticket_in.description,
-        photo_url = ticket_in.photo_url
+        photo_url = ticket_in.photo_url,
+        location_url = ticket_in.location_url
     )
     
     # if "vehicle_id" in ticket_in:

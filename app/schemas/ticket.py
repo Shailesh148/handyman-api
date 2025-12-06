@@ -33,6 +33,7 @@ class TicketCreate(BaseModel):
     description: Optional[str] = Field(None, max_length=2000)
     user_id: int
     photo_url: Optional[str] = None
+    location_url: Optional[str] = None
 
 class TicketUpdate(BaseModel):
     status: str
@@ -54,6 +55,7 @@ class TicketPublic(BaseModel):
     estimates: List[EstimatePublic]
     assignments: List[MechanicAssignmentRead]
     photo_url: Optional[str] = None
-    
+    location_url: Optional[str] = None
+
     class Config:
         from_attributes = True
