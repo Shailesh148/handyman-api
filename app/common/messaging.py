@@ -13,8 +13,8 @@ def send_notification(user_role: str, event: str, ticket_id: str = None):
 	db = SessionLocal()
 	notification_query = events_list_data.get(event)
 	user_data = []
-	if user_role == "ADMIN":
-		user_data = db.query(AppUser).filter(AppUser.role == "ADMIN").all()
+	if user_role == "OPERATOR":
+		user_data = db.query(AppUser).filter(AppUser.role == "OPERATOR").all()
 	else:
 		ticket_data = db.query(Ticket).filter(Ticket.id == ticket_id).first()
 

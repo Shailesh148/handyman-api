@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from app.core.security import require_auth
 
-from .endpoints import users, locations, tickets, mechanic_profile, mechanic_assignment, admin, estimate, service_type, messaging, user_device
+from .endpoints import users, locations, tickets, mechanic_profile, mechanic_assignment, admin, estimate, service_type, messaging, user_device, inventory
 
 api_router = APIRouter(
     dependencies=[Depends(require_auth)]  # applies auth to ALL v1 endpoints
@@ -17,3 +17,4 @@ api_router.include_router(estimate.router, prefix="/estimates", tags=["estimates
 api_router.include_router(service_type.router, prefix="/service_types", tags=["service_types"])
 api_router.include_router(messaging.router, prefix="/messages", tags=["messages"])
 api_router.include_router(user_device.router, prefix="/user_devices", tags=["user_devices"])
+api_router.include_router(inventory.router, prefix="/inventory", tags=["inventory"])

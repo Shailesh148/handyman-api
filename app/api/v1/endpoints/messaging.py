@@ -15,7 +15,6 @@ def send_push_notification(notification_query: NotificationQuery):
             title=notification_query.title,
             body=notification_query.body
         ),
-        # data=notification_query.body or {}
     )
     data = fetch_hello_docs()
     try:
