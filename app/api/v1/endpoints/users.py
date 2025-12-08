@@ -186,3 +186,23 @@ def get_all_mechanics(
 
 
     return result
+
+
+
+
+@router.get("/operator/all", response_model=List[UserPublic])
+def get_all_operators(
+    db: Session = Depends(get_db),
+    token_payload: Dict[str, Any] = Depends(require_auth),
+):
+    """
+    Fetch a user by email.
+
+    - Requires Auth0 token in Authorization header
+    - Returns public user data only (no DB id, no auth0_user_id)
+    """
+    operators = db.query(AppUser).filter(AppUser.role == 'OPERATOR').all()
+    
+    return operators
+    
+    
