@@ -40,4 +40,4 @@ class GarageUser(Base):
 	role = Column(String(50), nullable=True)
 
 	garage = relationship("Garage", back_populates="staff")
-
+	customer = relationship("AppUser", back_populates="garage_users")

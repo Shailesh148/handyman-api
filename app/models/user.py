@@ -40,3 +40,4 @@ class AppUser(Base):
         DateTime(timezone=True), server_default=text("NOW()")
     )
     app_user_tickets = relationship("Ticket", back_populates= "customer")
+    garage_users = relationship("GarageUser", back_populates="customer")

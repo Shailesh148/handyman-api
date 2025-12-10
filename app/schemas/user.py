@@ -3,6 +3,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr, Field
 from .service_type import ServiceTypePublic
+from .garage import GarageUserAssign
 
 class UserRole(str, Enum):
     CUSTOMER = "CUSTOMER"
@@ -42,6 +43,8 @@ class UserPublic(BaseModel):
     role: UserRole
     is_active: bool
     mechanic_services: Optional[List[ServiceTypePublic]] = None
-
+    garage_users: Optional[List[GarageUserAssign]] = None
+        
+        
     class Config:
         from_attributes = True
