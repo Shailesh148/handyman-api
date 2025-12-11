@@ -44,6 +44,6 @@ class AllGaragesPublic(BaseModel):
 class GarageUserAssign(BaseModel):
 	user_id: int
 	role: Optional[str] = None
-	id: int
-	garage_id: int
+	id: Optional[int] = None
+	garage_id: Optional[int] = None
 
