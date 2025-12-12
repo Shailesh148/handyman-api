@@ -8,6 +8,62 @@ from app.models.ticket import Ticket
 from app.core.db import get_db
 from app.core.db import SessionLocal
 from fastapi import APIRouter, status, Depends
+import requests
+
+def send_whatsapp_message(phone_number: str, name: str, url: str):
+	"""
+	Send a WhatsApp message using Facebook Graph API
+	
+	Args:
+		phone_number: Recipient phone number (e.g., "918978938067")
+		name: Name to include in the message template
+		url: URL to include in the message template
+	"""
+	url_api = "https://graph.facebook.com/v22.0/876284132243072/messages"
+	headers = {
+		"Authorization": "Bearer EAAgbSVkiD58BQJdk7JOo4aEDZADeZAXH0PQ4sb9Whm7XJcutpLZCsIoRH8gnMI21C6bAEEein2xEmelSuXari01PP4vw8hZCZABuAr8nh935Dqz8DL5vJkJNt1WZCHnhPSY1VYZBnxKhhAZCZCCc1AusZAZAUTXZBTBD7rDSWNKFF2yJ3hh2ZBld3VycpMZBiqOUihWAJZBZAwZDZD",
+		"Content-Type": "application/json"
+	}
+	
+	payload = {
+		"messaging_product": "whatsapp",
+		"to": phone_number,
+		"type": "template",
+		"template": {
+			"name": "ticket_order",
+			"language": {
+				"code": "en_US"
+			},
+			"components": [
+				{
+					"type": "body",
+					"sub_type": "",
+					"index": 0,
+					"parameters": [
+						{
+							"type": "text",
+							"text": name
+						},
+						{
+							"type": "text",
+							"text": url
+						}
+					]
+				}
+			]
+		}
+	}
+	
+	try:
+		response = requests.post(url_api, headers=headers, json=payload)
+		response.raise_for_status()
+		print(f"Successfully sent WhatsApp message to {phone_number}: {response.json()}")
+		return response.json()
+	except requests.exceptions.RequestException as e:
+		print(f"Error sending WhatsApp message: {e}")
+		if hasattr(e, 'response') and e.response is not None:
+			print(f"Response: {e.response.text}")
+		raise
 
 def send_notification(user_role: str, event: str, ticket_id: str = None):
 	db = SessionLocal()
@@ -21,25 +77,7 @@ def send_notification(user_role: str, event: str, ticket_id: str = None):
 		user_data = db.query(AppUser).filter(AppUser.id == ticket_data.customer_id).all() 
 
 	for each_user_data in user_data:
-		print(each_user_data.id)
-		user_devices = db.query(UserDevice).filter(UserDevice.user_id == each_user_data.id).all()
-
-		for each_user_device in user_devices:
-			message = messaging.Message(
-				token=each_user_device.fcm_token,
-				notification=messaging.Notification(
-					title=notification_query.get("title", ""),
-					body=notification_query.get("body", "")
-				),
-				data = {
-    				"url": "https://101inc-frontend.vercel.app/"
-  				}
-			)
-			try:
-				response = messaging.send(message)
-				print("Successfully sent message:", response)
-			except Exception as e:
-				print("Error sending message:", e)
+		send_whatsapp_message(each_user_data.phone,each_user_data.full_name, "101inc-frontend.vercel.app/")
   
   
   
