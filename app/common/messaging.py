@@ -9,7 +9,7 @@ from app.core.db import get_db
 from app.core.db import SessionLocal
 from fastapi import APIRouter, status, Depends
 import requests
-
+import os
 def send_whatsapp_message(phone_number: str, name: str, url: str):
 	"""
 	Send a WhatsApp message using Facebook Graph API
@@ -21,7 +21,7 @@ def send_whatsapp_message(phone_number: str, name: str, url: str):
 	"""
 	url_api = "https://graph.facebook.com/v22.0/876284132243072/messages"
 	headers = {
-		"Authorization": "Bearer EAAgbSVkiD58BQJdk7JOo4aEDZADeZAXH0PQ4sb9Whm7XJcutpLZCsIoRH8gnMI21C6bAEEein2xEmelSuXari01PP4vw8hZCZABuAr8nh935Dqz8DL5vJkJNt1WZCHnhPSY1VYZBnxKhhAZCZCCc1AusZAZAUTXZBTBD7rDSWNKFF2yJ3hh2ZBld3VycpMZBiqOUihWAJZBZAwZDZD",
+		"Authorization": "Bearer " + os.getenv("WHATSAPP_API_AUTH_TOKEN", ""),
 		"Content-Type": "application/json"
 	}
 	
