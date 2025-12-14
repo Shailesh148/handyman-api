@@ -64,7 +64,7 @@ def create_ticket(
     db.refresh(ticket)
     
     # add a thread to send notifications to operator 
-    thread = threading.Thread(send_notification("OPERATOR", "ticket_created",))
+    thread = threading.Thread(send_notification("OPERATOR", "ticket_created", "https://101inc-frontend.vercel.app/en/operator/tickets",))
     thread.start()
     
     return ticket
@@ -135,7 +135,7 @@ def update_ticket(
     )
     db.commit() 
     
-    thread = threading.Thread(send_notification("CUSTOMER", "ticket_completed", ticket_id))
+    thread = threading.Thread(send_notification("CUSTOMER", "ticket_completed", "https://101inc-frontend.vercel.app/en/my-bookings/" + ticket_id, ticket_id))
     thread.start()
     
     return "updated"

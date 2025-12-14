@@ -35,7 +35,7 @@ def modify_estimate(
     
     db.commit()
 
-    thread = threading.Thread(send_notification("OPERATOR", "estimate_accepted" if estimate_in.status == "APPROVED" else "estimate_rejected"))
+    thread = threading.Thread(send_notification("OPERATOR", "estimate_accepted" if estimate_in.status == "APPROVED" else "estimate_rejected", "https://101inc-frontend.vercel.app/en/operator/tickets",))
     thread.start()
     
     return "Updated"
@@ -72,6 +72,6 @@ def create_estimate(
     
     db.commit()
     
-    thread = threading.Thread(send_notification("CUSTOMER", "ticket_estimated", estimate_in.ticket_id,))
+    thread = threading.Thread(send_notification("CUSTOMER", "ticket_estimated", "https://101inc-frontend.vercel.app/en/my-bookings/" + estimate_in.ticket_id, estimate_in.ticket_id,))
     thread.start()
     return "Updated"

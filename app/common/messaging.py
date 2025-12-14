@@ -65,7 +65,7 @@ def send_whatsapp_message(phone_number: str, name: str, url: str):
 			print(f"Response: {e.response.text}")
 		raise
 
-def send_notification(user_role: str, event: str, ticket_id: str = None):
+def send_notification(user_role: str, event: str, url: str = None, ticket_id: str = None):
 	db = SessionLocal()
 	notification_query = events_list_data.get(event)
 	user_data = []
@@ -77,7 +77,7 @@ def send_notification(user_role: str, event: str, ticket_id: str = None):
 		user_data = db.query(AppUser).filter(AppUser.id == ticket_data.customer_id).all() 
 
 	for each_user_data in user_data:
-		send_whatsapp_message(each_user_data.phone, event, "https://101inc-frontend.vercel.app/en")
+		send_whatsapp_message(each_user_data.phone, event, url)
   
   
   
