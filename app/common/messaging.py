@@ -12,20 +12,31 @@ from app.core.db import SessionLocal
 from fastapi import APIRouter, status, Depends
 import requests
 import os
-def send_whatsapp_message(phone_number: str, template_name, status: str, url: str):
+def send_whatsapp_message(phone_number: str, template_name: str, *template_params: str):
 	"""
 	Send a WhatsApp message using Facebook Graph API
 	
 	Args:
 		phone_number: Recipient phone number (e.g., "918978938067")
-		name: Name to include in the message template
-		url: URL to include in the message template
+		template_name: WhatsApp template name
+		template_params: Variable number of body text parameters
 	"""
 	url_api = "https://graph.facebook.com/v22.0/876284132243072/messages"
 	headers = {
-		"Authorization": "Bearer " + os.getenv("WHATSAPP_API_AUTH_TOKEN", ""),
+		"Authorization": "Bearer EAAgbSVkiD58BQJdk7JOo4aEDZADeZAXH0PQ4sb9Whm7XJcutpLZCsIoRH8gnMI21C6bAEEein2xEmelSuXari01PP4vw8hZCZABuAr8nh935Dqz8DL5vJkJNt1WZCHnhPSY1VYZBnxKhhAZCZCCc1AusZAZAUTXZBTBD7rDSWNKFF2yJ3hh2ZBld3VycpMZBiqOUihWAJZBZAwZDZD",
 		"Content-Type": "application/json"
 	}
+	
+	# Build template parameters dynamically, skipping None values
+	parameters = [{"type": "text", "text": str(p)} for p in template_params if p is not None]
+	
+	body_component = {
+		"type": "body",
+		"sub_type": "",
+		"index": 0
+	}
+	if parameters:
+		body_component["parameters"] = parameters
 	
 	payload = {
 		"messaging_product": "whatsapp",
@@ -36,23 +47,7 @@ def send_whatsapp_message(phone_number: str, template_name, status: str, url: st
 			"language": {
 				"code": "en_US"
 			},
-			"components": [
-				{
-					"type": "body",
-					"sub_type": "",
-					"index": 0,
-					"parameters": [
-						{
-							"type": "text",
-							"text": status
-						},
-						{
-							"type": "text",
-							"text": url
-						}
-					]
-				}
-			]
+			"components": [body_component]
 		}
 	}
 	
@@ -79,7 +74,10 @@ def send_notification(user_role: str, event: str, url: str = None, ticket_id: st
 		user_data = db.query(AppUser).filter(AppUser.id == ticket_data.customer_id).all() 
 
 	for each_user_data in user_data:
-		send_whatsapp_message(each_user_data.phone, "ticket_order", event, url)
+		template_params = [event]
+		if url is not None:
+			template_params.append(url)
+		send_whatsapp_message(each_user_data.phone, "ticket_status", *template_params)
   
 
 def send_admin_reorder_notification(user_role: str, event: str, inv: Inventory):
@@ -89,7 +87,11 @@ def send_admin_reorder_notification(user_role: str, event: str, inv: Inventory):
 	
 	garage_data = db.query(Garage).filter(Garage.id == inv.garage_id).first()
 	
-	send_whatsapp_message("9779860569252", "ticket_order", str(inv.quantity), "https://101inc-frontend.vercel.app/en/admin/garage-management/" + inv.garage_id)
+	template_params = [
+		str(inv.quantity),
+		f"https://101inc-frontend.vercel.app/en/admin/garage-management/{inv.garage_id}",
+	]
+	send_whatsapp_message("9779860569252", "ticket_status", *template_params)
   
 events_list_data = {
 	"ticket_created":{
