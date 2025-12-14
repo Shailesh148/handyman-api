@@ -19,6 +19,8 @@ from app.schemas.inventory import (
 	UseItemRequest,
 	InventoryItemDetail,
 )
+import threading
+from app.common.messaging import send_admin_reorder_notification
 
 
 router = APIRouter()
@@ -212,6 +214,7 @@ def add_items_to_inventory(payload: StockAddRequest, db: Session = Depends(get_d
 
 @router.post("/use_item", response_model=InventoryPublic)
 def use_item_from_inventory(payload: UseItemRequest, db: Session = Depends(get_db)):
+    # 78
 	_validate_owner_ids(payload.garage_id, payload.operator_user_id)
 
 	inv = (
@@ -244,5 +247,10 @@ def use_item_from_inventory(payload: UseItemRequest, db: Session = Depends(get_d
 	)
 	db.commit()
 	db.refresh(inv)
+ 
+	if inv.quantity <= inv.minimum_quantity:
+		thread = threading.Thread(send_admin_reorder_notification("ADMIN", "reorder_inventory", inv))
+		thread.start()
+    
 	return inv
 

@@ -5,12 +5,14 @@ from sqlalchemy.orm import Session
 from app.models.user import AppUser
 from app.models.user_device import UserDevice
 from app.models.ticket import Ticket
+from app.models.inventory import Inventory
+from app.models.garage import Garage
 from app.core.db import get_db
 from app.core.db import SessionLocal
 from fastapi import APIRouter, status, Depends
 import requests
 import os
-def send_whatsapp_message(phone_number: str, name: str, url: str):
+def send_whatsapp_message(phone_number: str, template_name, status: str, url: str):
 	"""
 	Send a WhatsApp message using Facebook Graph API
 	
@@ -30,7 +32,7 @@ def send_whatsapp_message(phone_number: str, name: str, url: str):
 		"to": phone_number,
 		"type": "template",
 		"template": {
-			"name": "ticket_order",
+			"name": template_name,
 			"language": {
 				"code": "en_US"
 			},
@@ -42,7 +44,7 @@ def send_whatsapp_message(phone_number: str, name: str, url: str):
 					"parameters": [
 						{
 							"type": "text",
-							"text": name
+							"text": status
 						},
 						{
 							"type": "text",
@@ -77,9 +79,17 @@ def send_notification(user_role: str, event: str, url: str = None, ticket_id: st
 		user_data = db.query(AppUser).filter(AppUser.id == ticket_data.customer_id).all() 
 
 	for each_user_data in user_data:
-		send_whatsapp_message(each_user_data.phone, event, url)
+		send_whatsapp_message(each_user_data.phone, "ticket_order", event, url)
   
-  
+
+def send_admin_reorder_notification(user_role: str, event: str, inv: Inventory):
+	db = SessionLocal()
+	# notification_query = events_list_data.get(event)
+	garage_data = []
+	
+	garage_data = db.query(Garage).filter(Garage.id == inv.garage_id).first()
+	
+	send_whatsapp_message("9779860569252", "ticket_order", str(inv.quantity), "https://101inc-frontend.vercel.app/en/admin/garage-management/" + inv.garage_id)
   
 events_list_data = {
 	"ticket_created":{
