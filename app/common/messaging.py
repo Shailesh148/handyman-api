@@ -88,10 +88,11 @@ def send_admin_reorder_notification(user_role: str, event: str, inv: Inventory):
 	garage_data = db.query(Garage).filter(Garage.id == inv.garage_id).first()
 	
 	template_params = [
-		str(inv.quantity),
+		garage_data.name,
+		inv.item.name,
 		f"https://101inc-frontend.vercel.app/en/admin/garage-management/{inv.garage_id}",
 	]
-	send_whatsapp_message("9779860569252", "ticket_status", *template_params)
+	send_whatsapp_message("9779860569252", "inventory_reorder_improved", *template_params)
   
 events_list_data = {
 	"ticket_created":{
