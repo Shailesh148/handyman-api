@@ -72,6 +72,6 @@ def create_estimate(
     
     db.commit()
     
-    thread = threading.Thread(send_notification("CUSTOMER", "ticket_estimated", "https://101inc-frontend.vercel.app/en/my-bookings/" + estimate_in.ticket_id, estimate_in.ticket_id,))
+    thread = threading.Thread(send_notification("CUSTOMER", "ticket_estimated", "https://101inc-frontend.vercel.app/en/my-bookings/" + str(estimate_in.ticket_id), estimate_in.ticket_id,))
     thread.start()
     return "Updated"

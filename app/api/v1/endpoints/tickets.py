@@ -135,7 +135,7 @@ def update_ticket(
     )
     db.commit() 
     
-    thread = threading.Thread(send_notification("CUSTOMER", "ticket_completed", "https://101inc-frontend.vercel.app/en/my-bookings/" + ticket_id, ticket_id))
+    thread = threading.Thread(send_notification("CUSTOMER", "ticket_completed", "https://101inc-frontend.vercel.app/en/my-bookings/" + str(ticket_id), ticket_id))
     thread.start()
     
     return "updated"
