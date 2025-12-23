@@ -41,6 +41,7 @@ def fetch_assignments(
     user_id: int,
     db : Session = Depends(get_db)
 ):
+    print("hello")
     assignments = db.query(MechanicAssignmentModel).filter_by(mechanic_id=user_id).all()
         
     return assignments
