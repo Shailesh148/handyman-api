@@ -18,12 +18,12 @@ def send_whatsapp_message(phone_number: str, template_name: str, *template_param
 	
 	Args:
 		phone_number: Recipient phone number (e.g., "918978938067")
-		template_name: WhatsApp template name
-		template_params: Variable number of body text parameters
+		name: Name to include in the message template
+		url: URL to include in the message template
 	"""
 	url_api = "https://graph.facebook.com/v22.0/876284132243072/messages"
 	headers = {
-		"Authorization": "Bearer " + os.getenv("WHATSAPP_API_AUTH_TOKEN", ""),
+		"Authorization": "Bearer EAAgbSVkiD58BQJdk7JOo4aEDZADeZAXH0PQ4sb9Whm7XJcutpLZCsIoRH8gnMI21C6bAEEein2xEmelSuXari01PP4vw8hZCZABuAr8nh935Dqz8DL5vJkJNt1WZCHnhPSY1VYZBnxKhhAZCZCCc1AusZAZAUTXZBTBD7rDSWNKFF2yJ3hh2ZBld3VycpMZBiqOUihWAJZBZAwZDZD",
 		"Content-Type": "application/json"
 	}
 	

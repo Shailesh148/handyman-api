@@ -1,38 +1,19 @@
-
 from fastapi import APIRouter, status, Depends
-from app.schemas.mechanic_assignment import MechanicAssignmentRead, MechanicAssignment
 from sqlalchemy.orm import Session
-from app.models.ticket import Ticket
-from app.models.estimate import Estimate
-from app.models.payment import Payment
-from typing import Optional
-from app.models.mechanic_assignment import MechanicAssignmentModel
-from app.core.db import get_db
 from typing import List
-
+from app.core.db import get_db
+from app.schemas.mechanic_assignment import MechanicAssignmentRead, MechanicAssignment
+from app.services.mechanic_assignment_service import (
+    assign_mechanic as svc_assign_mechanic,
+    list_assignments as svc_list_assignments,
+)
 router =APIRouter()
 
 
 
 @router.post("/", response_model=MechanicAssignmentRead, status_code=status.HTTP_201_CREATED)
 def assign_mechanic(mechanic_assignment: MechanicAssignment, db: Session =  Depends(get_db)):
-    new_assignment =  MechanicAssignmentModel(
-        ticket_id = mechanic_assignment.ticket_id,
-        mechanic_id = mechanic_assignment.mechanic_user_id
-    )  
-    
-    
-    db.add(new_assignment)
-    db.flush()
-    
-    db.query(Ticket).filter(Ticket.id == mechanic_assignment.ticket_id).update(
-        {"status": "ASSIGNED"}, synchronize_session=False
-    )
-    
-    db.commit()
-    db.refresh(new_assignment)
-    
-    return new_assignment
+    return svc_assign_mechanic(db, mechanic_assignment)
 
 
 # fetch all job assignments for a mechanic user id 
@@ -41,7 +22,4 @@ def fetch_assignments(
     user_id: int,
     db : Session = Depends(get_db)
 ):
-    print("hello")
-    assignments = db.query(MechanicAssignmentModel).filter_by(mechanic_id=user_id).all()
-        
-    return assignments
+    return svc_list_assignments(db, user_id)

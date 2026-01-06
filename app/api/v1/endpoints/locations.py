@@ -1,14 +1,12 @@
 from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
-from app.utils.user_utils import get_current_user
 from app.core.db import get_db
-from app.models.location import Location
-from app.models.user import AppUser
 from app.schemas.location import LocationCreate, LocationPublic
-
+from app.services.location_service import (
+    create_location as svc_create_location,
+    list_user_locations as svc_list_user_locations,
+)
 router = APIRouter()
 
 
@@ -29,23 +27,7 @@ def create_location(
     #         .update({"is_primary": False})
     #     )
 
-    loc = Location(
-        user_id=location_in.user_id,
-        label=location_in.label,
-        address_line1=location_in.address_line1,
-        address_line2=location_in.address_line2,
-        city=location_in.city,
-        state=location_in.state,
-        postal_code=location_in.postal_code,
-        latitude=location_in.latitude,
-        longitude=location_in.longitude,
-        is_primary=location_in.is_primary,
-    )
-
-    db.add(loc)
-    db.commit()
-    db.refresh(loc)
-    return loc
+    return svc_create_location(db, location_in)
 
 
 @router.get(
@@ -57,10 +39,4 @@ def list_my_locations(
     db: Session = Depends(get_db),
     # current_user: AppUser = Depends(get_current_user),
 ):
-    locations = (
-        db.query(Location)
-        .filter(Location.user_id == user_id)
-        .order_by(Location.created_at.desc())
-        .all()
-    )
-    return locations
+    return svc_list_user_locations(db, int(user_id))

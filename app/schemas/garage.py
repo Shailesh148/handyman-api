@@ -47,3 +47,6 @@ class GarageUserAssign(BaseModel):
 	id: Optional[int] = None
 	garage_id: Optional[int] = None
 
+
+
+

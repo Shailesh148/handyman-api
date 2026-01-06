@@ -8,3 +8,4 @@ python-jose[cryptography]==3.3.0
 pydantic==2.8.0
 pydantic-settings==2.3.0
 email-validator
+requests

@@ -1,25 +1,14 @@
-from firebase_admin import messaging
-
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status
 from app.schemas.messaging import NotificationQuery
-from app.utils.firebase import fetch_hello_docs
-
+from app.services.messaging_service import send_push_notification as svc_send_push_notification
 router =APIRouter()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def send_push_notification(notification_query: NotificationQuery):
-    message = messaging.Message(
-        token=notification_query.token,
-        notification=messaging.Notification(
-            title=notification_query.title,
-            body=notification_query.body
-        ),
-    )
-    data = fetch_hello_docs()
     try:
-        response = messaging.send(message)
-        print("Successfully sent message:", response)
+        data = svc_send_push_notification(notification_query)
+        print("Successfully sent message")
     except Exception as e:
         print("Error sending message:", e)
     return data

@@ -1,21 +1,16 @@
-from typing import Dict, Any
-
+from typing import Dict, Any, List
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
 from app.core.db import get_db
 from app.core.security import require_auth
-from app.models.user import AppUser
 from app.schemas.user import UserCreate, UserRead, UserPublic
-from app.schemas.mechanic_profile import MechanicCreate
-from app.models.mechanic_profile import MechanicProfile
-from app.models.mechanic_service_type import MechanicServiceType
-from app.models.service_type import ServiceType
-from app.schemas.service_type import ServiceTypePublic
-import random
-from typing import List
-import string
+from app.services.user_service import (
+    create_user as svc_create_user,
+    get_user_by_email as svc_get_user_by_email,
+    get_user_by_phone as svc_get_user_by_phone,
+    list_mechanics_with_services as svc_list_mechanics_with_services,
+    list_operators as svc_list_operators,
+)
 router = APIRouter()
 
 
@@ -50,45 +45,7 @@ def create_user(
     #         status_code=status.HTTP_409_CONFLICT,
     #         detail="User already registered",
     #     )
-    auth0_user_id = ''.join(random.choices(string.digits, k=10))
-    user = AppUser(
-        auth0_user_id=auth0_user_id,
-        full_name=user_in.full_name,
-        phone=user_in.phone,
-        email=user_in.email,
-        role=user_in.role,
-    )
-
-    db.add(user)
-    db.flush()
-    if user_in.role == "MECHANIC":
-        new_mechanic = MechanicProfile(
-            user_id=user.id,
-            # base_location_id = mechanic.mechanic_location_id,
-        )
-
-        db.add(new_mechanic)
-        db.flush()
-        
-        for each_service_id in user_in.service_type_ids:
-            new_mechanic_service = MechanicServiceType(
-                mechanic_id = new_mechanic.id,
-                service_type_id = each_service_id
-            )
-
-            db.add(new_mechanic_service)
-        
-    try:
-        db.commit()
-    except IntegrityError as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Phone or Auth0 user already exists",
-        )
-
-    db.refresh(user)
-    return user
+    return svc_create_user(db, user_in)
 
 
 
@@ -105,7 +62,7 @@ def get_user_by_email(
     - Requires Auth0 token in Authorization header
     - Returns public user data only (no DB id, no auth0_user_id)
     """
-    user = db.query(AppUser).filter(AppUser.email == email).first()
+    user = svc_get_user_by_email(db, email)
 
     if not user:
         raise HTTPException(
@@ -128,8 +85,7 @@ def get_user_by_phone(
     - Requires Auth0 token in Authorization header
     - Returns public user data only (no DB id, no auth0_user_id)
     """
-    print(phone)
-    user = db.query(AppUser).filter(AppUser.phone == phone).first()
+    user = svc_get_user_by_phone(db, phone)
 
     if not user:
         raise HTTPException(
@@ -150,42 +106,7 @@ def get_all_mechanics(
     - Requires Auth0 token in Authorization header
     - Returns public user data only (no DB id, no auth0_user_id)
     """
-    all_mechanic_user = db.query(AppUser).filter(AppUser.role == 'MECHANIC').all()
-    result = []
-
-    for each_mechanic_user in all_mechanic_user:
-        mechanic_profile = db.query(MechanicProfile).filter(each_mechanic_user.id == MechanicProfile.user_id).first()
-        service_links = db.query(MechanicServiceType).filter(MechanicServiceType.mechanic_id == mechanic_profile.id).all()
-        service_types_public = []
-
-        for link in service_links:
-            st = db.query(ServiceType).filter(
-                ServiceType.id == link.service_type_id
-            ).first()
-
-            if st:
-                service_types_public.append(
-                    ServiceTypePublic(
-                        id=st.id,
-                        category_id=st.category_id,
-                        name=st.name,
-                        description=st.description,
-                    )
-                )
-        user_public = UserPublic(
-            id=each_mechanic_user.id,
-            full_name=each_mechanic_user.full_name,
-            phone=each_mechanic_user.phone,
-            email=each_mechanic_user.email,
-            role=each_mechanic_user.role,
-            is_active=each_mechanic_user.is_active,
-            mechanic_services=service_types_public,
-        )
-        # Attach to user object
-        result.append(user_public)
-
-
-    return result
+    return svc_list_mechanics_with_services(db)
 
 
 
@@ -201,8 +122,6 @@ def get_all_operators(
     - Requires Auth0 token in Authorization header
     - Returns public user data only (no DB id, no auth0_user_id)
     """
-    operators = db.query(AppUser).filter(AppUser.role == 'OPERATOR').all()
-    
-    return operators
+    return svc_list_operators(db)
     
     
