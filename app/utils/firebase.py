@@ -14,7 +14,7 @@ db: Optional[Client] = None  # This will be set later
 
 def initialize_firebase():
     global db
-    cred = firebase_admin.credentials.Certificate("/etc/firebase/service_account.json") 
+    cred = firebase_admin.credentials.Certificate("app/core/service_account.json") 
     firebase_admin.initialize_app(cred) 
     db = firestore.client()
 
