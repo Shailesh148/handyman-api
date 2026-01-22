@@ -19,7 +19,7 @@ jobs:
         - name: Push the latest Docker image
           run: docker push registry.digitalocean.com/handyman-docker-registry/dev/handyman-api:latest
         - name: Save DigitalOcean kubeconfig with short-lived credentials
-          run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 kubernetes-handyman-dev
+          run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 one-one-inc
         - name: Deploy to DigitalOcean Kubernetes
           run: kubectl rollout restart deployment handyman-api
         - name: Verify deployment
