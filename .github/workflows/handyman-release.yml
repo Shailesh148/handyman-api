@@ -15,9 +15,9 @@ jobs:
         - name: Login To Registry
           run: doctl registry login
         - name: Build the latest Docker image
-          run: docker build . --file Dockerfile --tag registry.digitalocean.com/handyman-docker-registry/dev/handyman-api:latest
+          run: docker build . --file Dockerfile --tag registry.digitalocean.com/handyman-docker-registry-unique/dev/handyman-api:latest
         - name: Push the latest Docker image
-          run: docker push registry.digitalocean.com/handyman-docker-registry/dev/handyman-api:latest
+          run: docker push registry.digitalocean.com/handyman-docker-registry-unique/dev/handyman-api:latest
         - name: Save DigitalOcean kubeconfig with short-lived credentials
           run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 one-one-inc
         - name: Deploy to DigitalOcean Kubernetes
